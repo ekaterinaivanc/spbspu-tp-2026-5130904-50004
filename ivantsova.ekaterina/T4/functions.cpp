@@ -15,7 +15,6 @@ void ivantsova::printShape(const std::weak_ptr<ivantsova::Shape>& wptr, const st
     throw std::runtime_error("Weak pointer expired");
   }
   ivantsova::rectangle_t frame = shape->getFrameRect();
-  ivantsova::point_t topLeft = ivantsova::getTopLeftCorner(frame);
   std::cout << index << "." << name << "\n";
   std::cout << "area = " << shape->getArea() << "\n";
   std::cout << "framerect: center(" << frame.pos.x << ";" << frame.pos.y << "), width = " << frame.width << \
@@ -74,7 +73,6 @@ ivantsova::rectangle_t ivantsova::getAllFrame(const std::vector<std::weak_ptr<iv
 }
 
 void ivantsova::printAllFrame(const ivantsova::rectangle_t& rect) {
-  ivantsova::point_t topLeft = ivantsova::getTopLeftCorner(rect);
   std::cout << "Total framerect: center: (" << rect.pos.x << ";" << rect.pos.y << ")" << "\n";
   std::cout << "width = " << rect.width << ", height = " << rect.height << "\n";
 }
