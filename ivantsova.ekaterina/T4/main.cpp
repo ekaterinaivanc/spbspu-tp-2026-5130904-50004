@@ -31,8 +31,7 @@ int main()
     ivantsova::printAllFrame(ivantsova::getAllFrame(wshapes));
     double x, y, k;
     if (!(std::cin>> x >> y)) {
-      std::cerr << "Invalid input" << "\n";
-      return 1;
+      return 0;
     }
     if (!(std::cin >> k)) {
       std::cerr << "invalid input" << "\n";
