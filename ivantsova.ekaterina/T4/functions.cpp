@@ -18,7 +18,8 @@ void ivantsova::printShape(const std::weak_ptr<ivantsova::Shape>& wptr, const st
   ivantsova::point_t topLeft = ivantsova::getTopLeftCorner(frame);
   std::cout << index << "." << name << "\n";
   std::cout << "area = " << shape->getArea() << "\n";
-  std::cout << "framerect: center(" << frame.pos.x << ";" << frame.pos.y << "), width = " << frame.width << ", height = " << frame.height << "\n";
+  std::cout << "framerect: center(" << frame.pos.x << ";" << frame.pos.y << "), width = " << frame.width << \
+  ", height = " << frame.height << "\n";
 }
 
 void ivantsova::printAll(const std::vector<std::weak_ptr<ivantsova::Shape>>& wshapes, const std::vector<std::string>& names) {
