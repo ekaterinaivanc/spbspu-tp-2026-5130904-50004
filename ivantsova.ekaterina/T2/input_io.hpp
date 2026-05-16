@@ -22,9 +22,19 @@ namespace ivantsova {
     double value;
   };
 
+  std::istream& operator>>(std::istream& is, DoubleSci& ds);
+  std::ostream& operator<<(std::ostream& os, const DoubleSci& ds);
+  bool operator<(const DoubleSci& lhs, const DoubleSci& rhs);
+  bool operator==(const DoubleSci& lhs, const DoubleSci& rhs);
+
   struct UllBin {
     unsigned long long value;
   };
+
+  std::istream& operator>>(std::istream& is, UllBin& ub);
+  std::ostream& operator<<(std::ostream& os, const UllBin& ub);
+  bool operator<(const UllBin& lhs, const UllBin& rhs);
+  bool operator==(const UllBin& lhs, const UllBin& rhs);
 }
 
 #endif
