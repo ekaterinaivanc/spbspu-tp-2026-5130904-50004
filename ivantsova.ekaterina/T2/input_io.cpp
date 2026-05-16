@@ -57,3 +57,53 @@ bool ivantsova::operator<(const ivantsova::DoubleSci& lhs, const ivantsova::Doub
 bool ivantsova::operator==(const ivantsova::DoubleSci& lhs, const ivantsova::DoubleSci& rhs) {
   return std::abs(lhs.value - rhs.value) < std::numeric_limits< double >::epsilon();
 }
+
+std::istream& ivantsova::operator>>(std::istream& is, ivantsova::UllBin& ub) {
+  std::istream::sentry s(is);
+  if (!s) {
+    return is;
+  }
+  ivantsova::IOGuard guard(is);
+  char c1 = 0, c2 = 0;
+  is >> c1 >> c2;
+  if (c1 != '0' || (c2 != 'b' && c2 != 'B')) {
+    is.setstate(std::ios_base::failbit);
+    return is;
+  }
+  std::string bin_str;
+  is >> bin_str;
+  ub.value = 0;
+  for (char digit : bin_str) {
+    if (digit != '0' && digit != '1') {
+      is.setstate(std::ios_base::failbit);
+      return is;
+    }
+    ub.value = (ub.value << 1) | (digit - '0');
+  }
+  return is;
+}
+
+std::ostream& ivantsova::operator<<(std::ostream& os, const ivantsova::UllBin& ub) {
+  ivantsova::IOGuard guard(os);
+  os << "0b";
+  if (ub.value == 0) {
+    os << '0';
+    return os;
+  }
+  std::string bin;
+  unsigned long long n = ub.value;
+  while (n > 0) {
+    bin = char('0' + (n & 1)) + bin;
+    n >>= 1;
+  }
+  os << bin;
+  return os;
+}
+
+bool ivantsova::operator<(const ivantsova::UllBin& lhs, const ivantsova::UllBin& rhs) {
+  return lhs.value < rhs.value;
+}
+
+bool ivantsova::operator==(const ivantsova::UllBin& lhs, const ivantsova::UllBin& rhs) {
+  return lhs.value == rhs.value;
+}
