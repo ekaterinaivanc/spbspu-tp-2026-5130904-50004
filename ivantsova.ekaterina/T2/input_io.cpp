@@ -82,27 +82,19 @@ std::istream& ivantsova::operator>>(std::istream& is, ivantsova::UllBin& ub) {
     }
     token += c;
   }
-  if (token.empty()) {
+  if (token.size() < 3 || token[0] != '0' || (token[1] != 'b' && token[1] != 'B')) {
     is.setstate(std::ios_base::failbit);
     return is;
   }
-  if (token.size() >= 3 && token[0] == '0' && (token[1] == 'b' || token[1] == 'B')) {
-    ub.value = 0;
-    for (size_t i = 2; i < token.size(); ++i) {
-      if (token[i] != '0' && token[i] != '1') {
-        is.setstate(std::ios_base::failbit);
-        return is;
-      }
-      ub.value = (ub.value << 1) | (token[i] - '0');
-    }
-  } else {
-    try {
-      size_t processed_chars = 0;
-      ub.value = std::stoull(token, &processed_chars);
-    } catch (...) {
+  unsigned long long val = 0;
+  for (size_t i = 2; i < token.size(); ++i) {
+    if (token[i] != '0' && token[i] != '1') {
       is.setstate(std::ios_base::failbit);
+      return is;
     }
+    val = (val << 1) | (token[i] - '0');
   }
+  ub.value = val;
   return is;
 }
 
