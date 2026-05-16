@@ -11,8 +11,10 @@ int main() {
 
   using is_it = std::istream_iterator< T >;
   while (!std::cin.eof()) {
-    std::copy(is_it{std::cin}, is_it{}, std::back_inserter(data));
-    if (std::cin.fail() && !std::cin.eof()) {
+    T record;
+    if (std::cin >> record) {
+      data.push_back(record);
+    } else {
       std::cin.clear();
       std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     }
