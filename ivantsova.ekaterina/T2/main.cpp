@@ -8,8 +8,6 @@
 int main() {
   using T = ivantsova::DataStruct;
   std::vector< T > data;
-
-  using is_it = std::istream_iterator< T >;
   while (!std::cin.eof()) {
     T record;
     if (std::cin >> record) {
