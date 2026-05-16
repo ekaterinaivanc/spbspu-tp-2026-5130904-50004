@@ -35,6 +35,23 @@ namespace ivantsova {
   std::ostream& operator<<(std::ostream& os, const UllBin& ub);
   bool operator<(const UllBin& lhs, const UllBin& rhs);
   bool operator==(const UllBin& lhs, const UllBin& rhs);
+
+  struct DelimeterIO {
+    char expected;
+    char& last;
+  };
+
+  std::istream& operator>>(std::istream& is, DelimeterIO del);
+
+  struct KeyValueIO {
+    std::string key;
+    std::vector< bool >& is_been;
+    struct DataStruct& ds;
+  };
+
+  std::istream& operator>>(std::istream& is, KeyValueIO inp);
+
+  char check(std::istream& is, char expected);
 }
 
 #endif

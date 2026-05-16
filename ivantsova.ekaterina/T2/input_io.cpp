@@ -107,3 +107,17 @@ bool ivantsova::operator<(const ivantsova::UllBin& lhs, const ivantsova::UllBin&
 bool ivantsova::operator==(const ivantsova::UllBin& lhs, const ivantsova::UllBin& rhs) {
   return lhs.value == rhs.value;
 }
+
+char ivantsova::check(std::istream& is, char expected) {
+  char c = 0;
+  is >> c;
+  if (c != expected) {
+    is.setstate(std::ios_base::failbit);
+  }
+  return c;
+}
+
+std::istream& ivantsova::operator>>(std::istream& is, ivantsova::DelimeterIO del) {
+  del.last = ivantsova::check(is, del.expected);
+  return is;
+}
