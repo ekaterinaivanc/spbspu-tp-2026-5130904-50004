@@ -1,7 +1,10 @@
 #include "input_io.hpp"
+#include "data_struct.hpp"
 #include <iomanip>
 #include <cmath>
 #include <limits>
+#include <vector>
+#include <sstream>
 
 ivantsova::IOGuard::IOGuard(std::basic_ios< char >& s) :
   s_(s),
@@ -24,23 +27,18 @@ std::istream& ivantsova::operator>>(std::istream& is, ivantsova::DoubleSci& ds) 
     return is;
   }
   ivantsova::IOGuard guard(is);
-  double mantissa_int = 0, mantissa_frac = 0;
-  char dot = 0, e_char = 0, sign = 0;
-  int exponent = 0;
-
-  is >> mantissa_int >> dot >> mantissa_frac >> e_char >> sign >> exponent;
-  if (is && dot == '.' && (e_char == 'e' || e_char == 'E')) {
-    int frac_digits = 1;
-    double temp = mantissa_frac;
-    while (temp >= 10) {
-      temp /= 10;
-      frac_digits++;
+  std::string token;
+  char c;
+  while (is.get(c)) {
+    if (c == ' ' || c == '\t' || c == '\n' || c == ':' || c == ')') {
+      is.unget();
+      break;
     }
-    double mantissa = mantissa_int + mantissa_frac / std::pow(10.0, frac_digits);
-    ds.value = mantissa * std::pow(10.0, (sign == '-' ? -exponent : exponent));
-  } else {
-    is.setstate(std::ios_base::failbit);
+    token += c;
   }
+  std::stringstream ss(token);
+  ss >> ds.value;
+  if (ss.fail()) is.setstate(std::ios_base::failbit);
   return is;
 }
 
@@ -64,21 +62,26 @@ std::istream& ivantsova::operator>>(std::istream& is, ivantsova::UllBin& ub) {
     return is;
   }
   ivantsova::IOGuard guard(is);
-  char c1 = 0, c2 = 0;
-  is >> c1 >> c2;
-  if (c1 != '0' || (c2 != 'b' && c2 != 'B')) {
-    is.setstate(std::ios_base::failbit);
-    return is;
+  std::string token;
+  char c;
+  while (is.get(c)) {
+    if (c == ' ' || c == '\t' || c == '\n' || c == ':' || c == ')') {
+      is.unget();
+      break;
+    }
+    token += c;
   }
-  std::string bin_str;
-  is >> bin_str;
+  size_t start = 0;
+  if (token.size() >= 2 && token[0] == '0' && (token[1] == 'b' || token[1] == 'B')) {
+    start = 2;
+  }
   ub.value = 0;
-  for (char digit : bin_str) {
-    if (digit != '0' && digit != '1') {
+  for (size_t i = start; i < token.size(); ++i) {
+    if (token[i] != '0' && token[i] != '1') {
       is.setstate(std::ios_base::failbit);
       return is;
     }
-    ub.value = (ub.value << 1) | (digit - '0');
+    ub.value = (ub.value << 1) | (token[i] - '0');
   }
   return is;
 }
@@ -120,4 +123,37 @@ char ivantsova::check(std::istream& is, char expected) {
 std::istream& ivantsova::operator>>(std::istream& is, ivantsova::DelimeterIO del) {
   del.last = ivantsova::check(is, del.expected);
   return is;
+}
+
+static std::istream& getValueByKey(std::istream& is, std::string key, std::vector< bool >& is_been, ivantsova::DataStruct& ds) {
+  if (key == "key1") {
+    if (is_been[0]) {
+        is.setstate(std::ios_base::failbit);
+        return is;
+    }
+    is >> ds.key1;
+    is_been[0] = true;
+  } else if (key == "key2") {
+    if (is_been[1]) {
+        is.setstate(std::ios_base::failbit);
+        return is;
+    }
+    is >> ds.key2;
+    is_been[1] = true;
+  } else if (key == "key3") {
+    if (is_been[2]) {
+        is.setstate(std::ios_base::failbit);
+        return is;
+    }
+    char quote = 0;
+    std::getline(is >> ivantsova::DelimeterIO{'"', quote}, ds.key3, '"');
+    is_been[2] = true;
+  } else {
+    is.setstate(std::ios_base::failbit);
+  }
+  return is;
+}
+
+std::istream& ivantsova::operator>>(std::istream& is, ivantsova::KeyValueIO inp) {
+  return getValueByKey(is, inp.key, inp.is_been, inp.ds);
 }
