@@ -55,7 +55,19 @@ std::istream& ivantsova::operator>>(std::istream& is, ivantsova::DoubleSci& ds) 
 
 std::ostream& ivantsova::operator<<(std::ostream& os, const ivantsova::DoubleSci& ds) {
   ivantsova::IOGuard guard(os);
-  os << std::scientific << std::nouppercase << std::setprecision(1) << ds.value;
+  std::stringstream ss;
+  ss << std::scientific << std::nouppercase << std::setprecision(1) << ds.value;
+  std::string str = ss.str();
+  size_t e_pos = str.find("e+");
+  if (e_pos == std::string::npos) {
+    e_pos = str.find("e-");
+  }
+  if (e_pos != std::string::npos && e_pos + 3 < str.size()) {
+    if (str[e_pos + 2] == '0') {
+      str.erase(e_pos + 2, 1);
+    }
+  }
+  os << str;
   return os;
 }
 
