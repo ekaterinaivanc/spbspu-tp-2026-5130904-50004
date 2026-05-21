@@ -40,8 +40,10 @@ std::istream& ivantsova::operator>>(std::istream& in, ivantsova::Polygon& p) {
   std::vector< ivantsova::Point > pts;
   pts.reserve(count);
   std::copy_n(std::istream_iterator< ivantsova::Point >(in), count, std::back_inserter(pts));
-  if (in) {
+  if (in && pts.size() == count) {
     p.points = std::move(pts);
+  } else {
+    in.setstate(std::ios::failbit);
   }
   return in;
 }

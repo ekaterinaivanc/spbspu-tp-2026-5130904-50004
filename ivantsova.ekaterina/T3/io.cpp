@@ -2,8 +2,11 @@
 #include "shapes.hpp"
 
 std::istream& ivantsova::operator>>(std::istream& in, ivantsova::DelimIO&& delim) {
-  char c;
+  char c = 0;
   in >> c;
+  if (!in) {
+    return in;
+  }
   if (c != delim.expected) {
     in.setstate(std::ios::failbit);
   }
