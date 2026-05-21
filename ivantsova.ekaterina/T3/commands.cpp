@@ -6,6 +6,7 @@
 #include <functional>
 #include <cctype>
 #include <string>
+#include <limits>
 
 bool evenCount(const ivantsova::Polygon& p) {
   return p.points.size() % 2 == 0;
@@ -194,7 +195,9 @@ void ivantsova::rects(std::istream& in, std::ostream& out, const std::vector< Po
 void ivantsova::same(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
   Polygon target;
   in >> target;
-  if (!in) {
+  if (in.fail()) {
+    in.clear();
+    in.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
     throw std::invalid_argument("invalid");
   }
   std::string rest;
