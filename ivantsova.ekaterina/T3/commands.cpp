@@ -153,3 +153,54 @@ void ivantsova::min(std::istream& in, std::ostream& out, const std::vector< Poly
     throw std::invalid_argument("invalid");
   }
 }
+
+void ivantsova::count(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+  std::string param;
+  in >> param;
+  if (!in) {
+    throw std::invalid_argument("invalid");
+  }
+  if (param == "EVEN") {
+    out << std::count_if(polys.begin(), polys.end(), evenCount) << '\n';
+  }
+  else if (param == "ODD") {
+    out << std::count_if(polys.begin(), polys.end(), oddCount) << '\n';
+  }
+  else if (std::all_of(param.begin(), param.end(), isDigit)) {
+    size_t n = std::stoul(param);
+    if (n < 3) {
+      throw std::invalid_argument("invalid");
+    }
+    out << std::count_if(polys.begin(), polys.end(), std::bind(countEquals, std::placeholders::_1, n)) << '\n';
+  } else {
+    throw std::invalid_argument("invalid");
+  }
+  std::string rest;
+  std::getline(in, rest);
+  if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
+    throw std::invalid_argument("invalid");
+  }
+}
+
+void ivantsova::rects(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+  std::string rest;
+  std::getline(in, rest);
+  if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
+    throw std::invalid_argument("invalid");
+  }
+  out << std::count_if(polys.begin(), polys.end(), ivantsova::isRectangle) << '\n';
+}
+
+void ivantsova::same(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+  Polygon target;
+  in >> target;
+  if (!in) {
+    throw std::invalid_argument("invalid");
+  }
+  std::string rest;
+  std::getline(in, rest);
+  if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
+    throw std::invalid_argument("invalid");
+  }
+  out << std::count_if(polys.begin(), polys.end(), std::bind(ivantsova::isSame, target, std::placeholders::_1)) << '\n';
+}
