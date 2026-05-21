@@ -2,6 +2,8 @@
 #define IO_HPP
 
 #include <iostream>
+#include "shapes.hpp"
+#include <vector>
 
 namespace ivantsova {
   struct DelimIO {
@@ -20,6 +22,8 @@ namespace ivantsova {
     std::ios_base::fmtflags flags_;
     char fill_;
   };
+
+  void readData(std::istream& is, std::vector< Polygon >& polys);
 }
 
 #endif

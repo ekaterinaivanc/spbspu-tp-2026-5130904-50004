@@ -1,4 +1,5 @@
 #include "io.hpp"
+#include "shapes.hpp"
 
 std::istream& ivantsova::operator>>(std::istream& in, ivantsova::DelimIO&& delim) {
   char c;
@@ -22,4 +23,24 @@ ivantsova::IOGuard::~IOGuard() {
   s_.width(width_);
   s_.flags(flags_);
   s_.fill(fill_);
+}
+
+void ivantsova::readData(std::istream& is, std::vector< Polygon >& polys) {
+  if (is.eof()) {
+    return;
+  }
+  Polygon p;
+  if (is >> p) {
+    polys.push_back(p);
+    readData(is, polys);
+    return;
+  }
+  if (is.eof()) {
+    return;
+  }
+  is.clear();
+  std::string trash;
+  if (is >> trash) {
+    readData(is, polys);
+  }
 }
