@@ -17,6 +17,7 @@ namespace ivantsova {
   std::istream& operator>>(std::istream& in, Polygon& p);
   std::ostream& operator<<(std::ostream& out, const Point& p);
   bool operator==(const Point& a, const Point& b);
+  bool operator==(const Polygon& a, const Polygon& b);
 }
 
 #endif
