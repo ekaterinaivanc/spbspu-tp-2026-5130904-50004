@@ -73,7 +73,7 @@ void ivantsova::area(std::istream& in, std::ostream& out, const std::vector< Pol
   out << std::fixed << std::setprecision(1);
   if (param == "MEAN") {
     if (polys.empty()) {
-      throw std::invalid_argument("invalid");
+      throw std::invalid_argument("no polygons");
     }
     double total = std::accumulate(polys.begin(), polys.end(), 0.0, SumAll());
     out << total / static_cast< double >(polys.size()) << '\n';
@@ -89,23 +89,23 @@ void ivantsova::area(std::istream& in, std::ostream& out, const std::vector< Pol
   else if (std::all_of(param.begin(), param.end(), isDigit)) {
     size_t n = std::stoul(param);
     if (n < 3) {
-      throw std::invalid_argument("invalid");
+      throw std::invalid_argument("invalid number of vertex");
     }
     double total = std::accumulate(polys.begin(), polys.end(), 0.0, SumByCount(n));
     out << total << '\n';
   } else {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
   std::string rest;
   std::getline(in, rest);
   if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
 }
 
 void ivantsova::max(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
   if (polys.empty()) {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("no polygons");
   }
   std::string param;
   in >> param;
@@ -120,18 +120,18 @@ void ivantsova::max(std::istream& in, std::ostream& out, const std::vector< Poly
     auto it = std::max_element(polys.begin(), polys.end(), vertexLess);
     out << it->points.size() << '\n';
   } else {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
   std::string rest;
   std::getline(in, rest);
   if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
 }
 
 void ivantsova::min(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
   if (polys.empty()) {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("no polygons");
   }
   std::string param;
   in >> param;
@@ -146,12 +146,12 @@ void ivantsova::min(std::istream& in, std::ostream& out, const std::vector< Poly
     auto it = std::min_element(polys.begin(), polys.end(), vertexLess);
     out << it->points.size() << '\n';
   } else {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
   std::string rest;
   std::getline(in, rest);
   if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
 }
 
@@ -170,16 +170,16 @@ void ivantsova::count(std::istream& in, std::ostream& out, const std::vector< Po
   else if (std::all_of(param.begin(), param.end(), isDigit)) {
     size_t n = std::stoul(param);
     if (n < 3) {
-      throw std::invalid_argument("invalid");
+      throw std::invalid_argument("invalid nubber of vertex");
     }
     out << std::count_if(polys.begin(), polys.end(), std::bind(countEquals, std::placeholders::_1, n)) << '\n';
   } else {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
   std::string rest;
   std::getline(in, rest);
   if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
 }
 
@@ -187,23 +187,29 @@ void ivantsova::rects(std::istream& in, std::ostream& out, const std::vector< Po
   std::string rest;
   std::getline(in, rest);
   if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
-    throw std::invalid_argument("invalid");
+    throw std::invalid_argument("invalid parameter");
   }
   out << std::count_if(polys.begin(), polys.end(), ivantsova::isRectangle) << '\n';
 }
 
 void ivantsova::same(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
   Polygon target;
-  in >> target;
-  if (in.fail()) {
+  if (!(in >> target)) {
     in.clear();
     in.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
-    throw std::invalid_argument("invalid");
+    out << "<INVALID COMMAND>\n";
+    return;
+  }
+  if (target.points.size() < 3) {
+    out << "<INVALID COMMAND>\n";
+    return;
   }
   std::string rest;
   std::getline(in, rest);
   if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
-    throw std::invalid_argument("invalid");
+    out << "<INVALID COMMAND>\n";
+    return;
   }
-  out << std::count_if(polys.begin(), polys.end(), std::bind(ivantsova::isSame, target, std::placeholders::_1)) << '\n';
+  auto func = std::bind(&ivantsova::isSame, std::placeholders::_1, std::cref(target));
+  out << std::count_if(polys.begin(), polys.end(), func) << "\n";
 }
