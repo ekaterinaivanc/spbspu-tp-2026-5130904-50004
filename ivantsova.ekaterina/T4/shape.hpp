@@ -5,7 +5,8 @@
 #include "rectangle_type.hpp"
 
 namespace ivantsova {
-  class Shape {
+  class Shape
+  {
   public:
     virtual ~Shape() = default;
     virtual double getArea() const = 0;

@@ -1,15 +1,17 @@
-#include "functions.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <limits>
+#include "functions.hpp"
 
-ivantsova::point_t ivantsova::getTopLeftCorner(const ivantsova::rectangle_t& frame) {
+ivantsova::point_t ivantsova::getTopLeftCorner(const ivantsova::rectangle_t& frame)
+{
   double halfW = frame.width / 2.0;
   double halfH = frame.height / 2.0;
   return ivantsova::point_t(frame.pos.x - halfW, frame.pos.y + halfH);
 }
 
-void ivantsova::printShape(const std::weak_ptr<ivantsova::Shape>& wptr, const std::string& name, size_t index) {
+void ivantsova::printShape(const std::weak_ptr< ivantsova::Shape >& wptr, const std::string& name, size_t index)
+{
   auto shape = wptr.lock();
   if (!shape) {
     throw std::runtime_error("Weak pointer expired");
@@ -21,7 +23,8 @@ void ivantsova::printShape(const std::weak_ptr<ivantsova::Shape>& wptr, const st
   ", height = " << frame.height << "\n";
 }
 
-void ivantsova::printAll(const std::vector<std::weak_ptr<ivantsova::Shape>>& wshapes, const std::vector<std::string>& names) {
+void ivantsova::printAll(const std::vector< std::weak_ptr< ivantsova::Shape > >& wshapes, const std::vector< std::string >& names)
+{
   double total = 0.0;
   for (size_t i = 0; i < wshapes.size(); ++i) {
     auto shape = wshapes[i].lock();
@@ -33,14 +36,15 @@ void ivantsova::printAll(const std::vector<std::weak_ptr<ivantsova::Shape>>& wsh
   std::cout << "Total area = " << total << "\n";
 }
 
-ivantsova::rectangle_t ivantsova::getAllFrame(const std::vector<std::weak_ptr<ivantsova::Shape>>& wshapes) {
+ivantsova::rectangle_t ivantsova::getAllFrame(const std::vector< std::weak_ptr< ivantsova::Shape > >& wshapes)
+{
   if (wshapes.empty()) {
     return ivantsova::rectangle_t(ivantsova::point_t(0.0, 0.0), 0.0, 0.0);
   }
-  double minX = std::numeric_limits<double>::max();
-  double minY = std::numeric_limits<double>::max();
-  double maxX = std::numeric_limits<double>::lowest();
-  double maxY = std::numeric_limits<double>::lowest();
+  double minX = std::numeric_limits< double >::max();
+  double minY = std::numeric_limits< double >::max();
+  double maxX = std::numeric_limits< double >::lowest();
+  double maxY = std::numeric_limits< double >::lowest();
   for (const auto& wptr : wshapes) {
     auto shape = wptr.lock();
     if (!shape) {
@@ -72,12 +76,14 @@ ivantsova::rectangle_t ivantsova::getAllFrame(const std::vector<std::weak_ptr<iv
   return ivantsova::rectangle_t(center, width, height);
 }
 
-void ivantsova::printAllFrame(const ivantsova::rectangle_t& rect) {
+void ivantsova::printAllFrame(const ivantsova::rectangle_t& rect)
+{
   std::cout << "Total framerect: center: (" << rect.pos.x << ";" << rect.pos.y << ")" << "\n";
   std::cout << "width = " << rect.width << ", height = " << rect.height << "\n";
 }
 
-void ivantsova::scaleShapes(std::vector<std::weak_ptr<ivantsova::Shape>>& wshapes, const ivantsova::point_t& P, double k) {
+void ivantsova::scaleShapes(std::vector< std::weak_ptr< ivantsova::Shape > >& wshapes, const ivantsova::point_t& P, double k)
+{
   for (const auto& wptr : wshapes) {
     auto shape = wptr.lock();
     if (!shape) {
