@@ -1,14 +1,16 @@
-#include "shapes.hpp"
-#include "io.hpp"
 #include <algorithm>
 #include <iterator>
 #include <numeric>
+#include "shapes.hpp"
+#include "io.hpp"
 
-bool ivantsova::operator==(const ivantsova::Point& a, const ivantsova::Point& b) {
+bool ivantsova::operator==(const ivantsova::Point& a, const ivantsova::Point& b)
+{
   return a.x == b.x && a.y == b.y;
 }
 
-std::istream& ivantsova::operator>>(std::istream& in, ivantsova::Point& p) {
+std::istream& ivantsova::operator>>(std::istream& in, ivantsova::Point& p)
+{
   std::istream::sentry sentry(in);
   if (!sentry) {
     return in;
@@ -21,12 +23,14 @@ std::istream& ivantsova::operator>>(std::istream& in, ivantsova::Point& p) {
   return in;
 }
 
-std::ostream& ivantsova::operator<<(std::ostream& out, const ivantsova::Point& p) {
+std::ostream& ivantsova::operator<<(std::ostream& out, const ivantsova::Point& p)
+{
   out << '(' << p.x << ';' << p.y << ')';
   return out;
 }
 
-std::istream& ivantsova::operator>>(std::istream& in, ivantsova::Polygon& p) {
+std::istream& ivantsova::operator>>(std::istream& in, ivantsova::Polygon& p)
+{
   std::istream::sentry sentry(in);
   if (!sentry) {
     return in;
@@ -48,50 +52,59 @@ std::istream& ivantsova::operator>>(std::istream& in, ivantsova::Polygon& p) {
   return in;
 }
 
-struct ShiftToOrigin {
+struct ShiftToOrigin
+{
   const ivantsova::Point& base;
-  ivantsova::Point operator()(const ivantsova::Point& p) const {
+  ivantsova::Point operator()(const ivantsova::Point& p) const
+  {
     return ivantsova::Point{p.x - base.x, p.y - base.y};
   }
 };
 
-struct CompareWithOffset {
+struct CompareWithOffset
+{
   const std::vector< ivantsova::Point >& first;
   const std::vector< ivantsova::Point >& second;
   size_t offset;
-  CompareWithOffset(const std::vector< ivantsova::Point >& a, const std::vector< ivantsova::Point >& b, size_t off) :
-    first(a),
-    second(b),
-    offset(off)
+  CompareWithOffset(const std::vector< ivantsova::Point >& a, const std::vector< ivantsova::Point >& b, size_t off):
+   first(a),
+   second(b),
+   offset(off)
   {}
-  bool operator()(size_t idx) const {
+  bool operator()(size_t idx) const
+  {
     return first[idx] == second[(offset + idx) % second.size()];
   }
 };
 
-struct IsTrue {
-  bool operator()(bool v) const {
+struct IsTrue
+{
+  bool operator()(bool v) const
+  {
     return v;
   }
 };
 
-struct CheckOffset {
+struct CheckOffset
+{
   const std::vector< ivantsova::Point >& normA;
   const std::vector< ivantsova::Point >& normB;
   const std::vector< size_t >& indices;
-  CheckOffset(const std::vector<ivantsova::Point>& a, const std::vector<ivantsova::Point>& b, const std::vector<size_t>& idx) :
-    normA(a),
-    normB(b),
-    indices(idx)
+  CheckOffset(const std::vector< ivantsova::Point >& a, const std::vector< ivantsova::Point >& b, const std::vector< size_t >& idx):
+   normA(a),
+   normB(b),
+   indices(idx)
   {}
-  bool operator()(size_t start) const {
+  bool operator()(size_t start) const
+  {
     std::vector< bool > matches(indices.size());
     std::transform(indices.begin(), indices.end(), matches.begin(), CompareWithOffset(normA, normB, start));
     return std::all_of(matches.begin(), matches.end(), IsTrue());
   }
 };
 
-bool ivantsova::operator==(const ivantsova::Polygon& a, const ivantsova::Polygon& b) {
+bool ivantsova::operator==(const ivantsova::Polygon& a, const ivantsova::Polygon& b)
+{
   if (a.points.size() != b.points.size()) {
     return false;
   }

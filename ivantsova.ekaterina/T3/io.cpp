@@ -1,7 +1,8 @@
 #include "io.hpp"
 #include "shapes.hpp"
 
-std::istream& ivantsova::operator>>(std::istream& in, ivantsova::DelimIO&& delim) {
+std::istream& ivantsova::operator>>(std::istream& in, ivantsova::DelimIO&& delim)
+{
   char c = 0;
   in >> c;
   if (!in) {
@@ -13,22 +14,24 @@ std::istream& ivantsova::operator>>(std::istream& in, ivantsova::DelimIO&& delim
   return in;
 }
 
-ivantsova::IOGuard::IOGuard(std::basic_ios< char >& s) :
-  s_(s),
-  precision_(s.precision()),
-  width_(s.width()),
-  flags_(s.flags()),
-  fill_(s.fill())
+ivantsova::IOGuard::IOGuard(std::basic_ios< char >& s):
+ s_(s),
+ precision_(s.precision()),
+ width_(s.width()),
+ flags_(s.flags()),
+ fill_(s.fill())
 {}
 
-ivantsova::IOGuard::~IOGuard() {
+ivantsova::IOGuard::~IOGuard()
+{
   s_.precision(precision_);
   s_.width(width_);
   s_.flags(flags_);
   s_.fill(fill_);
 }
 
-void ivantsova::readData(std::istream& is, std::vector< Polygon >& polys) {
+void ivantsova::readData(std::istream& is, std::vector< Polygon >& polys)
+{
   if (is.eof()) {
     return;
   }

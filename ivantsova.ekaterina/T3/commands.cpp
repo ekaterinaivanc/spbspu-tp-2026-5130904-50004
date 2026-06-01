@@ -1,5 +1,3 @@
-#include "commands.hpp"
-#include "shapes_functions.hpp"
 #include <algorithm>
 #include <numeric>
 #include <iomanip>
@@ -7,64 +5,82 @@
 #include <cctype>
 #include <string>
 #include <limits>
+#include "commands.hpp"
+#include "shapes_functions.hpp"
 
-bool evenCount(const ivantsova::Polygon& p) {
+bool evenCount(const ivantsova::Polygon& p)
+{
   return p.points.size() % 2 == 0;
 }
 
-bool oddCount(const ivantsova::Polygon& p) {
+bool oddCount(const ivantsova::Polygon& p)
+{
   return p.points.size() % 2 == 1;
 }
 
-bool countEquals(const ivantsova::Polygon& p, size_t n) {
+bool countEquals(const ivantsova::Polygon& p, size_t n)
+{
   return p.points.size() == n;
 }
 
-bool areaLess(const ivantsova::Polygon& a, const ivantsova::Polygon& b) {
+bool areaLess(const ivantsova::Polygon& a, const ivantsova::Polygon& b)
+{
   return ivantsova::area(a) < ivantsova::area(b);
 }
 
-bool vertexLess(const ivantsova::Polygon& a, const ivantsova::Polygon& b) {
+bool vertexLess(const ivantsova::Polygon& a, const ivantsova::Polygon& b)
+{
   return a.points.size() < b.points.size();
 }
 
-bool isDigit(char c) {
+bool isDigit(char c)
+{
   return std::isdigit(c);
 }
 
-bool isSpace(char c) {
+bool isSpace(char c)
+{
   return c == ' ';
 }
 
-struct SumAll {
-  double operator()(double acc, const ivantsova::Polygon& p) const {
+struct SumAll
+{
+  double operator()(double acc, const ivantsova::Polygon& p) const
+  {
     return acc + ivantsova::area(p);
   }
 };
 
-struct SumEven {
-  double operator()(double acc, const ivantsova::Polygon& p) const {
+struct SumEven
+{
+  double operator()(double acc, const ivantsova::Polygon& p) const
+  {
     return acc + (p.points.size() % 2 == 0 ? ivantsova::area(p) : 0.0);
   }
 };
 
-struct SumOdd {
-  double operator()(double acc, const ivantsova::Polygon& p) const {
+struct SumOdd
+{
+  double operator()(double acc, const ivantsova::Polygon& p) const
+  {
     return acc + (p.points.size() % 2 == 1 ? ivantsova::area(p) : 0.0);
   }
 };
 
-struct SumByCount {
+struct SumByCount
+{
   size_t target;
-  SumByCount(size_t n) :
-    target(n)
+  SumByCount(size_t n):
+   target(n)
   {}
-  double operator()(double acc, const ivantsova::Polygon& p) const {
+  double operator()(double acc, const ivantsova::Polygon& p) const
+  {
     return acc + (p.points.size() == target ? ivantsova::area(p) : 0.0);
   }
 };
 
-void ivantsova::area(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+void ivantsova::area(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys)
+{
   std::string param;
   in >> param;
   if (!in) {
@@ -103,7 +119,8 @@ void ivantsova::area(std::istream& in, std::ostream& out, const std::vector< Pol
   }
 }
 
-void ivantsova::max(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+void ivantsova::max(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys)
+{
   if (polys.empty()) {
     throw std::invalid_argument("no polygons");
   }
@@ -129,7 +146,8 @@ void ivantsova::max(std::istream& in, std::ostream& out, const std::vector< Poly
   }
 }
 
-void ivantsova::min(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+void ivantsova::min(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys)
+{
   if (polys.empty()) {
     throw std::invalid_argument("no polygons");
   }
@@ -155,7 +173,8 @@ void ivantsova::min(std::istream& in, std::ostream& out, const std::vector< Poly
   }
 }
 
-void ivantsova::count(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+void ivantsova::count(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys)
+{
   std::string param;
   in >> param;
   if (!in) {
@@ -183,7 +202,8 @@ void ivantsova::count(std::istream& in, std::ostream& out, const std::vector< Po
   }
 }
 
-void ivantsova::rects(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+void ivantsova::rects(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys)
+{
   std::string rest;
   std::getline(in, rest);
   if (!std::all_of(rest.begin(), rest.end(), isSpace)) {
@@ -192,7 +212,8 @@ void ivantsova::rects(std::istream& in, std::ostream& out, const std::vector< Po
   out << std::count_if(polys.begin(), polys.end(), ivantsova::isRectangle) << '\n';
 }
 
-void ivantsova::same(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys) {
+void ivantsova::same(std::istream& in, std::ostream& out, const std::vector< Polygon >& polys)
+{
   Polygon target;
   if (!(in >> target)) {
     in.clear();

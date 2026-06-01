@@ -2,11 +2,12 @@
 #define IO_HPP
 
 #include <iostream>
-#include "shapes.hpp"
 #include <vector>
+#include "shapes.hpp"
 
 namespace ivantsova {
-  struct DelimIO {
+  struct DelimIO
+  {
     char expected;
   };
   std::istream& operator>>(std::istream& in, DelimIO&& delim);
