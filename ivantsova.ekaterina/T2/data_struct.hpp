@@ -6,7 +6,8 @@
 #include "input_io.hpp"
 
 namespace ivantsova {
-  struct DataStruct {
+  struct DataStruct
+  {
     DoubleSci key1;
     UllBin key2;
     std::string key3;

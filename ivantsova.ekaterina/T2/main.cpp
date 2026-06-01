@@ -5,7 +5,8 @@
 #include <limits>
 #include "data_struct.hpp"
 
-int main() {
+int main()
+{
   using T = ivantsova::DataStruct;
   std::vector< T > data;
   while (!std::cin.eof()) {

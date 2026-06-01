@@ -6,7 +6,8 @@
 #include <string>
 
 namespace ivantsova {
-  class IOGuard {
+  class IOGuard
+  {
   public:
     explicit IOGuard(std::basic_ios< char >& s);
     ~IOGuard();
@@ -18,7 +19,8 @@ namespace ivantsova {
     char fill_;
   };
 
-  struct DoubleSci {
+  struct DoubleSci
+  {
     double value;
   };
 
@@ -27,7 +29,8 @@ namespace ivantsova {
   bool operator<(const DoubleSci& lhs, const DoubleSci& rhs);
   bool operator==(const DoubleSci& lhs, const DoubleSci& rhs);
 
-  struct UllBin {
+  struct UllBin
+  {
     unsigned long long value;
   };
 
@@ -36,14 +39,16 @@ namespace ivantsova {
   bool operator<(const UllBin& lhs, const UllBin& rhs);
   bool operator==(const UllBin& lhs, const UllBin& rhs);
 
-  struct DelimeterIO {
+  struct DelimeterIO
+  {
     char expected;
     char& last;
   };
 
   std::istream& operator>>(std::istream& is, DelimeterIO del);
 
-  struct KeyValueIO {
+  struct KeyValueIO
+  {
     std::string key;
     std::vector< bool >& is_been;
     struct DataStruct& ds;
